@@ -2,10 +2,7 @@
 
 
 def msg
-def artifactId
-def releaseId
-def additionalArtifactIds
-def allTaskIds = [] as Set
+def bodhiId
 
 pipeline {
 
@@ -47,6 +44,8 @@ pipeline {
 
                     if (msg) {
 
+                        bodhiId = msg['update']['updateid']
+
                         msg['artifact']['builds'].each { build ->
                             allTaskIds.add(build['task_id'])
                         }
@@ -58,22 +57,14 @@ pipeline {
                             testProfile = msg['update']['release']['dist_tag']
                         }
 
-                        if (allTaskIds) {
-                            allTaskIds.each { taskId ->
-                                artifactId = "koji-build:${taskId}"
-                                additionalArtifactIds = allTaskIds.findAll{ it != taskId }.collect{ "koji-build:${it}" }.join(',')
-
-                                build(
-                                    job: 'fedora-ci/rmdepcheck-pipeline/master',
-                                    wait: false,
-                                    parameters: [
-                                        string(name: 'ARTIFACT_ID', value: artifactId),
-                                        string(name: 'ADDITIONAL_ARTIFACT_IDS',value: additionalArtifactIds),
-                                        string(name: 'TEST_PROFILE',value: testProfile)
-                                    ]
-                                )
-                            }
-                        }
+                        build(
+                            job: 'fedora-ci/rmdepcheck-pipeline/master',
+                            wait: false,
+                            parameters: [
+                                string(name: 'BODHI_UPDATE_ID', value: bodhiId),
+                                string(name: 'TEST_PROFILE',value: testProfile)
+                            ]
+                        )
                     }
                 }
             }
