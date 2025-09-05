@@ -3,6 +3,7 @@
 
 def msg
 def bodhiId
+def allTaskIds = [] as Set
 
 pipeline {
 
@@ -49,6 +50,7 @@ pipeline {
                         msg['artifact']['builds'].each { build ->
                             allTaskIds.add(build['task_id'])
                         }
+                        def artifactIds = allTaskIds.findAll{ it != taskId }.collect{ "koji-build:${it}" }.join(',')
 
                         def testProfile
                         if (msg['update']['release']['branch'] == 'epel10') {
@@ -62,6 +64,7 @@ pipeline {
                             wait: false,
                             parameters: [
                                 string(name: 'BODHI_UPDATE_ID', value: bodhiId),
+                                string(name: 'ARTIFACT_IDS', value: artifactIds),
                                 string(name: 'TEST_PROFILE',value: testProfile)
                             ]
                         )
