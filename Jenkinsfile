@@ -22,7 +22,7 @@ pipeline {
                    name: 'RabbitMQ',
                    overrides: [
                        topic: 'org.fedoraproject.prod.bodhi.update.status.testing.koji-build-group.build.complete',
-                       queue: 'osci-pipelines-queue-14'
+                       queue: 'osci-pipelines-queue-rmdepcheck'
                    ],
                    checks: [
                        [field: '$.update.release.dist_tag', expectedValue: '^(f[3-9]{1}[0-9]{1}|epel10.[0-9]+)$'],
