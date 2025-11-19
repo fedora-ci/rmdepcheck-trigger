@@ -25,8 +25,8 @@ pipeline {
                        queue: 'osci-pipelines-queue-rmdepcheck'
                    ],
                    checks: [
-                       [field: '$.update.release.dist_tag', expectedValue: '^(f[3-9]{1}[0-9]{1}|epel10.[0-9]+)$'],
-                       [field: '$.update.release.branch', expectedValue: '^(f[3-9]{1}[0-9]{1}|rawhide|epel10)$']
+                       [field: '$.update.release.dist_tag', expectedValue: '^(f[3-9]{1}[0-9]{1})$'],
+                       [field: '$.update.release.branch', expectedValue: '^(f[3-9]{1}[0-9]{1}|rawhide)$']
                    ]
                )
            ]
@@ -53,11 +53,7 @@ pipeline {
                         def artifactIds = allTaskIds.findAll{ it != taskId }.collect{ "koji-build:${it}" }.join(',')
 
                         def testProfile
-                        if (msg['update']['release']['branch'] == 'epel10') {
-                            testProfile = 'epel10'
-                        } else {
-                            testProfile = msg['update']['release']['dist_tag']
-                        }
+                        testProfile = msg['update']['release']['dist_tag']
 
                         build(
                             job: 'fedora-ci/rmdepcheck-pipeline/master',
