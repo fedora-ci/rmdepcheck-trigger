@@ -50,13 +50,13 @@ pipeline {
                         msg['artifact']['builds'].each { build ->
                             allTaskIds.add(build['task_id'])
                         }
-                        def artifactIds = allTaskIds.findAll{ it != taskId }.collect{ "koji-build:${it}" }.join(',')
+                        def artifactIds = allTaskIds.collect{ "koji-build:${it}" }.join(',')
 
                         def testProfile
                         testProfile = msg['update']['release']['dist_tag']
 
                         build(
-                            job: 'fedora-ci/rmdepcheck-pipeline/master',
+                            job: 'fedora-ci/rmdepcheck-pipeline/main',
                             wait: false,
                             parameters: [
                                 string(name: 'BODHI_UPDATE_ID', value: bodhiId),
