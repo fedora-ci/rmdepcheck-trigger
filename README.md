@@ -1,3 +1,3 @@
-# rpmdepcheck-trigger
+# rmdepcheck-trigger
 
-This repository contains the triggers for the rpmdepcheckc CI pipeline.
+This repository contains the triggers for the rmdepcheck CI pipeline.
