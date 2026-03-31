@@ -25,8 +25,7 @@ pipeline {
                        queue: 'osci-pipelines-queue-rmdepcheck'
                    ],
                    checks: [
-                       [field: '$.update.release.dist_tag', expectedValue: '^(f[3-9]{1}[0-9]{1})$'],
-                       [field: '$.update.release.branch', expectedValue: '^(f[3-9]{1}[0-9]{1}|rawhide)$']
+                       [field: '$.update.release.branch', expectedValue: '^(f[3-9]{1}[0-9]{1}|rawhide|epel.*|eln)$'],
                    ]
                )
            ]
@@ -52,8 +51,7 @@ pipeline {
                         }
                         def artifactIds = allTaskIds.collect{ "koji-build:${it}" }.join(',')
 
-                        def testProfile
-                        testProfile = msg['update']['release']['dist_tag']
+                        def branch = msg['update']['release']['branch']
 
                         build(
                             job: 'fedora-ci/rmdepcheck-pipeline/main',
@@ -61,7 +59,7 @@ pipeline {
                             parameters: [
                                 string(name: 'BODHI_UPDATE_ID', value: bodhiId),
                                 string(name: 'ARTIFACT_IDS', value: artifactIds),
-                                string(name: 'TEST_PROFILE',value: testProfile)
+                                string(name: 'DIST_GIT_BRANCH', value: branch),
                             ]
                         )
                     }
