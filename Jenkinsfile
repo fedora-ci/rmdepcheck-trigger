@@ -25,7 +25,9 @@ pipeline {
                        queue: 'osci-pipelines-queue-rmdepcheck'
                    ],
                    checks: [
-                       [field: '$.update.release.branch', expectedValue: '^(f[3-9]{1}[0-9]{1}|rawhide|epel.*|eln)$'],
+                       // Get every update except Flatpack and Container
+                       // See the `ID Prefix`` of the releases in https://bodhi.fedoraproject.org/releases
+                       [field: '$.update.release.id_prefix', expectedValue: '^(FEDORA|FEDORA-EPEL|FEDORA-EPEL-NEXT)$'],
                    ]
                )
            ]
